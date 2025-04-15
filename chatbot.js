@@ -3,7 +3,7 @@ const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3002;
 
 const client = new Client({
     authStrategy: new LocalAuth(),
