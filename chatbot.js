@@ -244,7 +244,7 @@ client.on('message', async msg => {
         // Considera que o cliente enviou os itens
         await client.sendMessage(
             remetente,
-            "✏️ Obrigado por informar os itens e quantidades. Agora, por favor, explique qual era o seu último pedido, para que possamos conferir as informações e atendê-lo da melhor forma."
+            "✏️ Obrigado por informar os itens e quantidades. Um dos nossos atendentes já irá lhe atender."
         );
         userContext[remetente] = 'welcome';
         return;
