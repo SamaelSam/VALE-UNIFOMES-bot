@@ -381,7 +381,7 @@ const sendWelcomeMessage = async (from) => {
     userContext[from] = 'welcome';
     await client.sendMessage(
         from,
-        "👋 Olá! \nPara um melhor atendimento, por gentileza, selecione uma das opções abaixo😊:\n1️⃣ Solicitar uma cotação.\n2️⃣ Já sou cliente, quero fazer uma nova cotação.\n3️⃣ Consultar meu pedido.\n4️⃣ Financeiro e/ou administrativo."
+        "👋 Olá! Seja bem-vindo(a) à Vale Uniformes. \nPara um melhor atendimento, por gentileza, selecione uma das opções abaixo😊:\n1️⃣ Solicitar uma cotação.\n2️⃣ Já sou cliente, quero fazer uma nova cotação.\n3️⃣ Consultar meu pedido.\n4️⃣ Financeiro e/ou administrativo."
     );
 };
 
