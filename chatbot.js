@@ -1,4 +1,4 @@
-const express = require('express');  
+const express = require('express');
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 
@@ -108,7 +108,7 @@ client.on('message', async msg => {
                 userContext[remetente] = 'consulta_pedido_inicial';
                 await client.sendMessage(
                     remetente,
-                    "📦 O que deseja saber sobre seu pedido?\n0️⃣ Para voltar ao menu principal.\n1️⃣ Qual o prazo de entrega do meu pedido?\n2️⃣ Quero alterar algo no meu pedido.\n4️⃣ Outros"
+                    "📦 O que deseja saber sobre seu pedido?\n0️⃣ Para voltar ao menu principal.\n1️⃣ Qual o prazo de entrega do meu pedido?\n2️⃣ Quero alterar algo no meu pedido.\n3️⃣ Outros"
                 );
                 return;
             case '4':
@@ -268,15 +268,30 @@ client.on('message', async msg => {
         if (body === '2' || body === '3') {
             await client.sendMessage(
                 remetente,
-                "✅ Recebemos sua solicitação. Nossa equipe analisará e retornará em breve."
+                "🔹 Pedido de informações do cliente:\nTudo bem! Informe abaixo o que \ngostaria de saber sobre o seu pedido!\n0️⃣ Para voltar ao menu principal."
             );
-            userContext[remetente] = 'welcome';
+            userContext[remetente] = 'aguardando_solicitacao'; // Alterado aqui
             return;
         }
         await client.sendMessage(
             remetente,
             "Opção inválida. Responda com (1), (2) ou (3), ou digite \"menu\" ou \"0\" para reiniciar."
         );
+        return;
+    }
+
+    // Novo contexto para tratar a resposta após selecionar 2 ou 3
+    if (contexto === 'aguardando_solicitacao') {
+        if (body === '0') {
+            userContext[remetente] = 'welcome';
+            await sendWelcomeMessage(remetente);
+            return;
+        }
+        await client.sendMessage(
+            remetente,
+            "✅ Recebemos sua solicitação. Nossa \nequipe analisará e retornará em breve."
+        );
+        userContext[remetente] = 'welcome';
         return;
     }
 
@@ -310,22 +325,17 @@ client.on('message', async msg => {
         }
         const opcao = body.toUpperCase();
         if (opcao === 'A') {
-            // Novo fluxo livre para Financeiro
+            userContext[remetente] = 'aguardando_msg_financeiro';
             await client.sendMessage(
                 remetente,
                 "Como o nosso setor financeiro pode lhe ajudar?"
             );
-            await client.sendMessage(
-                remetente,
-                "✅ Recebido! Estamos verificando e já iremos responder!"
-            );
-            userContext[remetente] = 'welcome';
             return;
         } else if (opcao === 'B') {
             userContext[remetente] = 'financeiro_pagamento';
             await client.sendMessage(
                 remetente,
-                "🔹 Informações sobre pagamentos:\nClaro! O que você gostaria de saber sobre o pagamento ou recebimento?\n0️⃣ Para voltar ao menu principal.\n1️⃣ Preciso de uma segunda via de boleto\n2️⃣ Perguntas sobre formas de pagamento\n4️⃣ Outras questões financeiras"
+                "🔹 Informações sobre pagamentos:\nClaro! O que você gostaria de saber sobre o pagamento ou recebimento?\n0️⃣ Para voltar ao menu principal.\n1️⃣ Preciso de uma segunda via de boleto\n2️⃣ Perguntas sobre formas de pagamento\n3️⃣ Outras questões financeiras"
             );
             return;
         } else if (opcao === 'C') {
@@ -368,6 +378,14 @@ client.on('message', async msg => {
             );
             return;
         }
+        userContext[remetente] = 'welcome';
+        return;
+    }
+    if (contexto === 'aguardando_msg_financeiro') {
+        await client.sendMessage(
+            remetente,
+            "✅ Recebido! Estamos verificando e já iremos responder!"
+        );
         userContext[remetente] = 'welcome';
         return;
     }
