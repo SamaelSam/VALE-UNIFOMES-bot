@@ -33,39 +33,27 @@ const userContext = {};
 const atendimentos = {};         
 const temporizadores = {};       
 const cotacaoCount = {};         
+// QR Code
+const services = [
+    "1. Criação de Websites",
+    "2. E-mails Personalizados",
+    "3. Campanhas Sociais",
+    "4. WhatsApp"
+];
 
-let qrDataUrl = null; // Variável para armazenar o QR Code
-
-// Novo endpoint para exibir o QR Code
-app.get('/qrcode', (req, res) => {
-    if (!qrDataUrl) {
-        return res.send('QR Code ainda não disponível. Aguarde...');
-    }
-    
-    res.send(`
-        <html>
-            <body style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
-                <img src="${qrDataUrl}" style="max-width: 80%; max-height: 80%;">
-                <p style="position: absolute; bottom: 20px; text-align: center;">
-                    Escaneie o QR Code pelo WhatsApp > Linked Devices
-                </p>
-            </body>
-        </html>
-    `);
+client.on('qr', (qr) => {
+    console.log('\n🔗 Link para autenticação:');
+    // Link direto e clicável para gerar o QR Code
+    console.log(`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qr)}\n`);
+    console.log('⚠️ Acesse o link acima ou escaneie pelo WhatsApp Web');
 });
 
-// QR Code
-client.on('qr', async (qr) => {
-    console.log("📸 QR Code disponível em:");
-    console.log(`http://localhost:${PORT}/qrcode\n`);
-    
-    // Gera data URL do QR Code
-    qrDataUrl = await qrcode.toDataURL(qr, {
-        errorCorrectionLevel: 'H',
-        type: 'image/png',
-        margin: 2,
-        scale: 8
-    });
+client.on('ready', () => {
+    console.log('✅ Tudo certo! WhatsApp conectado');
+});
+
+client.on('auth_failure', (message) => {
+    console.error('❌ Falha na autenticação:', message);
 });
 
 // Ativar/desativar atendimento humano
