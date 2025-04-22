@@ -162,7 +162,7 @@ client.on('message', async msg => {
             userContext[remetente] = 'cotacao_novos_modelos';
             await client.sendMessage(
                 remetente,
-                "🔹 Escolha de categoria:\nEntendido! Nossa equipe vai lhe ajudar a escolher os melhores modelos de fardamento.\nPara isso, escolha o seu segmento:\n0️⃣ Para voltar ao menu principal.\n1️⃣ Operacional\n2️⃣ Social\n3️⃣ Hospitalar\n4️⃣ Gastronomia\n(5) Malharia\n(6) Doméstico"
+                "🔹 Escolha de categoria:\nEntendido! Nossa equipe vai lhe ajudar a escolher os melhores modelos de fardamento.\nPara isso, escolha o seu segmento:\n0️⃣ Para voltar ao menu principal.\n1️⃣ Operacional\n2️⃣ Social\n3️⃣ Hospitalar\n4️⃣ Gastronomia\n5️⃣ Malharia\n6️⃣ Doméstico"
             );
             return;
         }
