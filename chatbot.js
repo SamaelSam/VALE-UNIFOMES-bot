@@ -1,5 +1,5 @@
 const express = require('express');
-const qrcode = require('qrcode-terminal');
+const qrcode = require('qrcode');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 
 const app = express();
@@ -34,11 +34,38 @@ const atendimentos = {};
 const temporizadores = {};       
 const cotacaoCount = {};         
 
-// Exibição do QR Code no terminal
-client.on('qr', (qr) => {
-    console.log("📸 Escaneie o QR Code para conectar:");
-    qrcode.generate(qr, { small: true });
-    console.log("⚠️ Certifique-se de escanear o QR Code rapidamente, pois ele expira em alguns segundos!");
+let qrDataUrl = null; // Variável para armazenar o QR Code
+
+// Novo endpoint para exibir o QR Code
+app.get('/qrcode', (req, res) => {
+    if (!qrDataUrl) {
+        return res.send('QR Code ainda não disponível. Aguarde...');
+    }
+    
+    res.send(`
+        <html>
+            <body style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;">
+                <img src="${qrDataUrl}" style="max-width: 80%; max-height: 80%;">
+                <p style="position: absolute; bottom: 20px; text-align: center;">
+                    Escaneie o QR Code pelo WhatsApp > Linked Devices
+                </p>
+            </body>
+        </html>
+    `);
+});
+
+// QR Code
+client.on('qr', async (qr) => {
+    console.log("📸 QR Code disponível em:");
+    console.log(`http://localhost:${PORT}/qrcode\n`);
+    
+    // Gera data URL do QR Code
+    qrDataUrl = await qrcode.toDataURL(qr, {
+        errorCorrectionLevel: 'H',
+        type: 'image/png',
+        margin: 2,
+        scale: 8
+    });
 });
 
 // Ativar/desativar atendimento humano
