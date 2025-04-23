@@ -25,7 +25,7 @@ function setInactivityTimeout(userId) {
                 'Encerramos o atendimento por inatividade. Se precisar de algo, estou por aqui!'
             );
         }
-    }, 10 * 60 * 1000); // 10 minutos
+    }, 10 * 60 * 60 * 1000); // 10 horas
 }
 
 // Objetos para controle de fluxo e atendimento
