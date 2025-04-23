@@ -134,10 +134,7 @@ client.on('message', async msg => {
                 );
                 return;
             default:
-                await client.sendMessage(
-                    remetente,
-                    
-                );
+               
                 return;
         }
     }
