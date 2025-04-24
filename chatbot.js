@@ -17,13 +17,9 @@ const inactivityTimeouts = {};
 function setInactivityTimeout(userId) {
     if (inactivityTimeouts[userId]) clearTimeout(inactivityTimeouts[userId]);
     inactivityTimeouts[userId] = setTimeout(() => {
-        // Se ainda estiver em atendimento humano, encerra por inatividade
+        // Retorna ao modo automático silenciosamente
         if (atendimentos[userId] === false) {
-            atendimentos[userId] = true;  // volta ao automático
-            client.sendMessage(
-                userId,
-                'Encerramos o atendimento por inatividade. Se precisar de algo, estou por aqui!'
-            );
+            atendimentos[userId] = true;  // Volta ao automático sem notificação
         }
     }, 10 * 60 * 60 * 1000); // 10 horas
 }
